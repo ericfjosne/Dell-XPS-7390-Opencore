@@ -42,17 +42,18 @@ Base files:
 ----
 
 - [OpenCorePKG](https://github.com/acidanthera/OpenCorePkg/releases/), retaining only the following:
--- EFI/BOOT/BOOTx64.efi
--- EFI/OC/OpenCore.efi
--- EFI/OC/ACPI/* (empty folder)
--- EFI/OC/Kexts/* (empty folder)
--- EFI/OC/Drivers/OpenRuntime.efi
--- EFI/OC/Drivers/OpenCanopy.efi
--- EFI/OC/Tools/OpenShell.efi
--- EFI/OC/Resources/* (keep all of it)
+  - EFI/BOOT/BOOTx64.efi
+  - EFI/OC/OpenCore.efi
+  - EFI/OC/ACPI/* (empty folder)
+  - EFI/OC/Kexts/* (empty folder)
+  - EFI/OC/Drivers/OpenRuntime.efi
+  - EFI/OC/Drivers/OpenCanopy.efi
+  - EFI/OC/Tools/OpenShell.efi
+  - EFI/OC/Resources/* (keep all of it)
 
 Your EFI folder should look like this:
-<img src="https://imgur.com/LqptJp3"/>
+
+<img src="https://i.imgur.com/LqptJp3.png"/>
 
 Drivers:
 ----
@@ -62,9 +63,9 @@ Kexts:
 ----
 
 - [VirtualSMC](https://github.com/acidanthera/VirtualSMC/releases): Emulates the SMC chip found on real macs, without this macOS will not boot
--- SMCBatteryManager.kext: Used for measuring battery readouts on laptops
--- SMCDellSensors.kext: Allows for finer monitoring and control of the fans on Dell machines supporting System Management Mode(SMM)
--- SMCProcessor.kext: Used for monitoring CPU temperature
+  - SMCBatteryManager.kext: Used for measuring battery readouts on laptops
+  - SMCDellSensors.kext: Allows for finer monitoring and control of the fans on Dell machines supporting System Management Mode(SMM)
+  - SMCProcessor.kext: Used for monitoring CPU temperature
 - [Lilu](https://github.com/acidanthera/Lilu/releases): A kext to patch many processes, required for AppleALC, WhateverGreen, VirtualSMC and many other kexts. Without Lilu, they will not work.
 - [WhateverGreen](https://github.com/acidanthera/WhateverGreen/releases): Used for graphics patching, DRM fixes, board ID checks, framebuffer fixes, etc; all GPUs benefit from this kext.
 
