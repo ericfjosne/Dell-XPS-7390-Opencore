@@ -103,16 +103,22 @@ At this stage, your EFI folder should be looking like this:
 
 Let's get started with the configuration file.
 
-Config.pst
+Config.plist
 ---
-This is the guide that must be followed for this machine: https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/coffee-lake-plus.html#starting-point
+For this machine, we need to follow the [Coffee Lake laptop guide](coffee-lake-plus). Here are the adjusted parts which ended up being custom, or not straightforward:
 
 - ACPI
   - Patch: Because we are currently using SSDT-XOSI, we need to add the [following patching](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/coffee-lake-plus.html#acpi)
-- Booter
-  - [quirks](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/coffee-lake-plus.html#booter)
 - DeviceProperties
   - Add: The GPU is supposed to be UHD 620, meaning that the AAPL,ig-platform-id _should_ be `00009B3E` according to the install guide. However, the [WhateverGreen FAQ](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md#intel-uhd-graphics-610-655-coffee-lake-and-comet-lake-processors) recommends using the value `0900A53E` as AAPL,ig-platform-id (framebuffer = `0x3EA50009`). I went with WhateverGreen recommendation, but forced device-id with data `9B3E0000`.
+- Kernel
+  - Emulate: since this is a comet lake CPU, I checked the hardware ID according to Windows. It is identified as `ACPI\GenuineIntel_-_Intel64_Family_6_Model_142`. On Linux, it returns 142. No need for spoofing any value.
+- NVRAM
+  - Add
+    - I added UIScale as Data = 02 under `4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14` as the screen of this machine is a HiDPI one.
+- PlatformInfo
+  - I decided to go with a MacBookPro16,3. It matches the CPU type of the [i7-10510U](https://ark.intel.com/content/www/us/en/ark/products/196449/intel-core-i710510u-processor-8m-cache-up-to-4-90-ghz.html): quad core 15W, 13" display size. Only the iGPU does not match, but what we changed in the DeviceProperties should be enough.
+
 
 
 
@@ -123,6 +129,7 @@ External useful links
 - Sambow23 similar project: https://github.com/sambow23/Dell-XPS-13-7390-macOS
 - Intel ARK processor page: [Intel® Core™ i7-10510U Processor](https://ark.intel.com/content/www/us/en/ark/products/196449/intel-core-i710510u-processor-8m-cache-up-to-4-90-ghz.html)
 - Wikipedia Intel Comet Lake page: https://en.wikipedia.org/wiki/Comet_Lake_(microprocessor)
+- Check Apple coverage based on serial number: https://checkcoverage.apple.com/
 
 License
 -----
