@@ -33,6 +33,67 @@ Configuration:
 - **BIOS version** : `1.13.0`
 - **XG6 NVMe device firmware version** : `10604107`
 
+Gathering files
+---
+
+This guide applies to Opencore version `0.7.9`
+
+Base files:
+----
+
+- [OpenCorePKG](https://github.com/acidanthera/OpenCorePkg/releases/), retaining only the following:
+-- EFI/BOOT/BOOTx64.efi
+-- EFI/OC/OpenCore.efi
+-- EFI/OC/ACPI/* (empty folder)
+-- EFI/OC/Kexts/* (empty folder)
+-- EFI/OC/Drivers/OpenRuntime.efi
+-- EFI/OC/Drivers/OpenCanopy.efi
+-- EFI/OC/Tools/OpenShell.efi
+-- EFI/OC/Resources/* (keep all of it)
+
+Your EFI folder should look like this:
+<img src="https://imgur.com/LqptJp3"/>
+
+Drivers:
+----
+- [HfsPlus.efi](https://github.com/acidanthera/OcBinaryData/blob/master/Drivers/HfsPlus.efi): Needed for seeing HFS volumes(ie. macOS Installers and Recovery partitions/images).
+
+Kexts:
+----
+
+- [VirtualSMC](https://github.com/acidanthera/VirtualSMC/releases): Emulates the SMC chip found on real macs, without this macOS will not boot
+-- SMCBatteryManager.kext: Used for measuring battery readouts on laptops
+-- SMCDellSensors.kext: Allows for finer monitoring and control of the fans on Dell machines supporting System Management Mode(SMM)
+-- SMCProcessor.kext: Used for monitoring CPU temperature
+- [Lilu](https://github.com/acidanthera/Lilu/releases): A kext to patch many processes, required for AppleALC, WhateverGreen, VirtualSMC and many other kexts. Without Lilu, they will not work.
+- [WhateverGreen](https://github.com/acidanthera/WhateverGreen/releases): Used for graphics patching, DRM fixes, board ID checks, framebuffer fixes, etc; all GPUs benefit from this kext.
+
+Sound:
+- [AppleALC](https://github.com/acidanthera/AppleALC/releases): Used for AppleHDA patching, allowing support for the majority of on-board sound controllers. AppleALCU.kext is a pared down version of AppleALC that only supports digital audio - but you can still use AppleALC.kext on digital audio-only systems
+
+Wifi:
+- [AirportItlwm](https://github.com/OpenIntelWireless/itlwm/releases): Adds support for a large variety of Intel wireless cards and works natively in recovery thanks to IO80211Family integration
+
+Bluetooth:
+- [IntelBluetoothFirmware](https://github.com/OpenIntelWireless/IntelBluetoothFirmware/releases): Adds Bluetooth support to macOS when paired with an Intel wireless card
+
+Storage controller:
+- [NVMeFix](https://github.com/acidanthera/NVMeFix/releases): Used for fixing power management and initialization on non-Apple NVMe
+
+PS2 Keyboards/Trackpads:
+- [VoodooPS2](https://github.com/acidanthera/VoodooPS2/releases): Works with various PS2 keyboards, mice, and trackpads
+- [VoodooI2C](https://github.com/VoodooI2C/VoodooI2C/releases): Attaches to I2C controllers to allow plugins to talk to I2C trackpads. To be paired with the plugin VoodooI2CHID.
+
+SSDTs:
+----
+Needed for Comet Lake CPU:
+
+- CPU: [SSDT-PLUG](https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html)
+- EC:[SSDT-EC-USBX](https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html)
+- Backlight: [SSDT-PNLF](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html)
+- I2C Trackpad: [SSDT-GPI0](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html)
+- AWAC: [SSDT-AWAC](https://dortania.github.io/Getting-Started-With-ACPI/Universal/awac.html)
+
 ## Hardware compatibility
 
 External useful links
