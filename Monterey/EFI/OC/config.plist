@@ -94,7 +94,7 @@
 				<key>BaseSkip</key>
 				<integer>0</integer>
 				<key>Comment</key>
-				<string>Replace one byte sequence with another</string>
+				<string>OSI rename</string>
 				<key>Count</key>
 				<integer>0</integer>
 				<key>Enabled</key>
