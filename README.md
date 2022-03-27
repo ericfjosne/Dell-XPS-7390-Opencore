@@ -96,7 +96,12 @@ Needed for Comet Lake CPU:
 - I2C Trackpad: [SSDT-GPI0](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html). This is a manual step, so it will be done post-install. You will need a mouse to install macOS.
 - AWAC system clock: [SSDT-AWAC](https://dortania.github.io/Getting-Started-With-ACPI/Universal/awac.html). Link to prebuilt: [SSDT-AWAC.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-AWAC.aml)
 
-## Hardware compatibility
+
+At this stage, your EFI folder should be looking like this:
+
+<img src="https://i.imgur.com/BpuXThZ.png"/>
+
+Let's get started with the configuration file.
 
 External useful links
 ---
