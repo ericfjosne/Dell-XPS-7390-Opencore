@@ -3,7 +3,6 @@ Dell XPS 13 7390
 
 Machine specifications:
 ---
-- **Official specs page** : [XPS 13 7390 Setup and Specifications](https://www.dell.com/support/manuals/en-us/xps-13-7390-laptop/xps-7390-setup-and-specifications/specifications-of-xps-13-7390?guid=guid-7c9f07ce-626e-44ca-be3a-a1fb036413f9&lang=en-us)
 - **CPU** : [Intel® Core™ i7-10510U Processor](https://ark.intel.com/content/www/us/en/ark/products/196449/intel-core-i710510u-processor-8m-cache-up-to-4-90-ghz.html)
   - processor ID: 806ED (found in the BIOS)
   - 4 cores
@@ -32,13 +31,15 @@ Machine specifications:
 Configuration:
 ---
 - **BIOS version** : `1.13.0`
-- **XG6 NVMe device firmware version** : 10604107
+- **XG6 NVMe device firmware version** : `10604107`
 
 ## Hardware compatibility
 
 External useful links
 ---
+- Official Dell product page: [XPS 13 7390 Setup and Specifications](https://www.dell.com/support/manuals/en-us/xps-13-7390-laptop/xps-7390-setup-and-specifications/specifications-of-xps-13-7390?guid=guid-7c9f07ce-626e-44ca-be3a-a1fb036413f9&lang=en-us)
 - Sambow23 similar project: https://github.com/sambow23/Dell-XPS-13-7390-macOS
+- Intel ARK processor page: [Intel® Core™ i7-10510U Processor](https://ark.intel.com/content/www/us/en/ark/products/196449/intel-core-i710510u-processor-8m-cache-up-to-4-90-ghz.html)
 - Wikipedia Intel Comet Lake page: https://en.wikipedia.org/wiki/Comet_Lake_(microprocessor)
 
 License
