@@ -117,7 +117,7 @@ For this machine, we need to follow the [Coffee Lake laptop guide](coffee-lake-p
   - Add
     - I added UIScale as Data = 02 under `4D1EDE05-38C7-4A6A-9CC6-4BCCA8B38C14` as the screen of this machine is a HiDPI one.
 - PlatformInfo
-  - I decided to go with a MacBookPro16,3. It matches the CPU type of the [i7-10510U](https://ark.intel.com/content/www/us/en/ark/products/196449/intel-core-i710510u-processor-8m-cache-up-to-4-90-ghz.html): quad core 15W, 13" display size. Only the iGPU does not match, but what we changed in the DeviceProperties should be enough.
+  - I decided to go with a MacBookPro16,3. It matches the CPU type of the [i7-10510U](https://ark.intel.com/content/www/us/en/ark/products/196449/intel-core-i710510u-processor-8m-cache-up-to-4-90-ghz.html): quad core 15W, 13" display size. Only the iGPU does not match, but what we changed in the DeviceProperties should be enough. You will need to adjust all other parameters for this to work.
 
 
 
