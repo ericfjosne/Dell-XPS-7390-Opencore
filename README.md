@@ -63,6 +63,7 @@ Kexts:
 ----
 
 - [VirtualSMC](https://github.com/acidanthera/VirtualSMC/releases): Emulates the SMC chip found on real macs, without this macOS will not boot
+  - VirtualSMC.kext (obviously)
   - SMCBatteryManager.kext: Used for measuring battery readouts on laptops
   - SMCDellSensors.kext: Allows for finer monitoring and control of the fans on Dell machines supporting System Management Mode(SMM)
   - SMCProcessor.kext: Used for monitoring CPU temperature
@@ -73,10 +74,10 @@ Sound:
 - [AppleALC](https://github.com/acidanthera/AppleALC/releases): Used for AppleHDA patching, allowing support for the majority of on-board sound controllers. AppleALCU.kext is a pared down version of AppleALC that only supports digital audio - but you can still use AppleALC.kext on digital audio-only systems
 
 Wifi:
-- [AirportItlwm](https://github.com/OpenIntelWireless/itlwm/releases): Adds support for a large variety of Intel wireless cards and works natively in recovery thanks to IO80211Family integration
+- [AirportItlwm](https://github.com/OpenIntelWireless/itlwm/releases): Adds support for a large variety of Intel wireless cards and works natively in recovery thanks to IO80211Family integration. Get the kext file matching your macOS distribution.
 
 Bluetooth:
-- [IntelBluetoothFirmware](https://github.com/OpenIntelWireless/IntelBluetoothFirmware/releases): Adds Bluetooth support to macOS when paired with an Intel wireless card
+- [IntelBluetoothFirmware](https://github.com/OpenIntelWireless/IntelBluetoothFirmware/releases): Adds Bluetooth support to macOS when paired with an Intel wireless card. Get only the `IntelBluetoothFirmware.kext` file.
 
 Storage controller:
 - [NVMeFix](https://github.com/acidanthera/NVMeFix/releases): Used for fixing power management and initialization on non-Apple NVMe
@@ -89,11 +90,11 @@ SSDTs:
 ----
 Needed for Comet Lake CPU:
 
-- CPU: [SSDT-PLUG](https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html)
-- EC:[SSDT-EC-USBX](https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html)
-- Backlight: [SSDT-PNLF](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html)
-- I2C Trackpad: [SSDT-GPI0](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html)
-- AWAC: [SSDT-AWAC](https://dortania.github.io/Getting-Started-With-ACPI/Universal/awac.html)
+- CPU: [SSDT-PLUG](https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html). Link to prebuilt: [SSDT-PLUG-DRTNIA.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-PLUG-DRTNIA.aml).
+- EC: [SSDT-EC-USBX](https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html). Link to laptop prebuilt: [SSDT-EC-USBX-LAPTOP.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-EC-USBX-LAPTOP.aml)
+- Backlight: [SSDT-PNLF](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html). Link to prebuilt: [SSDT-PNLF.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-PNLF.aml)
+- I2C Trackpad: [SSDT-GPI0](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html). Will be done post-install
+- AWAC: [SSDT-AWAC](https://dortania.github.io/Getting-Started-With-ACPI/Universal/awac.html). Link to prebuilt: [SSDT-AWAC.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-AWAC.aml)
 
 ## Hardware compatibility
 
