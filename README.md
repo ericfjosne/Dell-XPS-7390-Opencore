@@ -93,7 +93,7 @@ Needed for Comet Lake CPU:
 - CPU: [SSDT-PLUG](https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html). Link to prebuilt: [SSDT-PLUG-DRTNIA.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-PLUG-DRTNIA.aml).
 - Embedded controllers: [SSDT-EC-USBX](https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html). Link to laptop prebuilt: [SSDT-EC-USBX-LAPTOP.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-EC-USBX-LAPTOP.aml)
 - Backlight: [SSDT-PNLF](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html). Link to prebuilt: [SSDT-PNLF.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-PNLF.aml)
-- I2C Trackpad: [SSDT-GPI0](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html). This is a manual step, so it will be done post-install. You will need a mouse to install macOS.
+- I2C Trackpad: [SSDT-GPI0](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html). This is a manual step, so it will be done post-install. You will need a mouse to install macOS. For now, we will use [SSDT-XOSI.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-XOSI.aml)
 - AWAC system clock: [SSDT-AWAC](https://dortania.github.io/Getting-Started-With-ACPI/Universal/awac.html). Link to prebuilt: [SSDT-AWAC.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-AWAC.aml)
 
 
@@ -102,6 +102,14 @@ At this stage, your EFI folder should be looking like this:
 <img src="https://i.imgur.com/BpuXThZ.png"/>
 
 Let's get started with the configuration file.
+
+Config.pst
+---
+This is the guide that must be followed for this machine: https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/coffee-lake-plus.html#starting-point
+
+Because we are currently using SSDT-XOSI, we need to change the [following values](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/coffee-lake-plus.html#acpi)
+
+
 
 External useful links
 ---
