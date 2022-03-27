@@ -53,7 +53,7 @@ Base files:
 
 Your EFI folder should look like this:
 
-<img src="https://i.imgur.com/LqptJp3.png"/>
+<img src="https://i.imgur.com/aQ3Uu3i.png"/>
 
 Drivers:
 ----
