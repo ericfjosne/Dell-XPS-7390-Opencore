@@ -107,7 +107,13 @@ Config.pst
 ---
 This is the guide that must be followed for this machine: https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/coffee-lake-plus.html#starting-point
 
-Because we are currently using SSDT-XOSI, we need to change the [following values](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/coffee-lake-plus.html#acpi)
+- ACPI
+  - Patch: Because we are currently using SSDT-XOSI, we need to add the [following patching](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/coffee-lake-plus.html#acpi)
+- Booter
+  - [quirks](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/coffee-lake-plus.html#booter)
+- DeviceProperties
+  - Add: The GPU is supposed to be UHD 620, meaning that the AAPL,ig-platform-id _should_ be `00009B3E` according to the install guide. However, the [WhateverGreen FAQ](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md#intel-uhd-graphics-610-655-coffee-lake-and-comet-lake-processors) recommends using the value `0900A53E` as AAPL,ig-platform-id (framebuffer = `0x3EA50009`). I went with WhateverGreen recommendation, but forced device-id with data `9B3E0000`.
+
 
 
 
