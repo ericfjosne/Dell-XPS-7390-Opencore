@@ -165,7 +165,7 @@ When validating whether X86PlatformPlugin was enabled using [IORegistryExplorer]
 Went on to use [CPUFriend](https://github.com/acidanthera/CPUFriend/releases) and [CPUFriendFriend](https://github.com/corpnewt/CPUFriendFriend).
 
 When running CPUFriendFriend, the following values were selected:
-- 0C for LFM (default)
+- 04 for LFM (value found in BIOS)
 - 90 for balanced power saving (default)
 - 05 for Modern MacBook Pro (default)
 - y to enable additional power saving features (custom)
