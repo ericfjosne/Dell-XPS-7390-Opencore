@@ -78,6 +78,7 @@ Wifi:
 
 Bluetooth:
 - [IntelBluetoothFirmware](https://github.com/OpenIntelWireless/IntelBluetoothFirmware/releases): Adds Bluetooth support to macOS when paired with an Intel wireless card. Get only the `IntelBluetoothFirmware.kext` file.
+- [BlueToolFixup.kext](https://github.com/acidanthera/BrcmPatchRAM/releases): Specific need for Bluetooth to work on Monterey
 
 Storage controller:
 - [NVMeFix](https://github.com/acidanthera/NVMeFix/releases): Used for fixing power management and initialization on non-Apple NVMe
@@ -85,6 +86,9 @@ Storage controller:
 PS2 Keyboards/Trackpads:
 - [VoodooPS2](https://github.com/acidanthera/VoodooPS2/releases): Works with various PS2 keyboards, mice, and trackpads
 - [VoodooI2C](https://github.com/VoodooI2C/VoodooI2C/releases): Attaches to I2C controllers to allow plugins to talk to I2C trackpads. To be paired with the plugin VoodooI2CHID.
+
+USB ports mapping:
+- [USBToolBox](https://github.com/USBToolBox/tool): Instead of mapping everything manually, let's use something that does it for you. Used the Windows tool to discover all available ports of the machine and generate the `UTBMap.kext` for it. Both the [latest `USBToolBox.kext`](https://github.com/USBToolBox/kext/releases) and this generated `UTBMap.kext` are necessary.
 
 SSDTs:
 ----
@@ -120,7 +124,63 @@ For this machine, we need to follow the [Coffee Lake laptop guide](coffee-lake-p
   - I decided to go with a MacBookPro16,3. It matches the CPU type of the [i7-10510U](https://ark.intel.com/content/www/us/en/ark/products/196449/intel-core-i710510u-processor-8m-cache-up-to-4-90-ghz.html): quad core 15W, 13" display size. Only the iGPU does not match, but what we changed in the DeviceProperties should be enough. You will need to adjust all other parameters for this to work.
 
 
+Post-install fixes:
+---
 
+Fixing Sound:
+---
+
+According to the soundcard name, our codec is ALC3271. But this is a rebranded one. The true lies elsewhere. Under Windows, in the Device Manager, when opening up the properties > events linked to the sound card, it shows:
+
+```
+Device INTELAUDIO\FUNC_01&VEN_10EC&DEV_0299&SUBSYS_10280962&REV_1000\5&18f4f3cb&0&0001 was configured.
+```
+
+This means that this actually requires codec ALC299, which requires layout 21 or 22 according to the [AppleALC Supported codecs page](https://github.com/acidanthera/AppleALC/wiki/Supported-codecs). The right value for this machine is `22`. 
+
+After checking with gfxutil, our sound devide is identified as follow:
+
+```
+efj@xps Downloads % ./gfxutil -f HDEF
+00:1f.3 8086:02c8 /PCI0@0/HDEF@1F,3 = PciRoot(0x0)/Pci(0x1F,0x3)
+```
+
+So, we reflect all this in our `config.plist` by adding:
+
+```
+DeviceProperties > Add > PciRoot(0x0)/Pci(0x1F,0x3) > layout-id = 22 (Number)
+```
+
+But it still doesn't work ... so, as advised in the install guide, we need to create [SSDT-HPET fixes](https://dortania.github.io/Getting-Started-With-ACPI/Universal/irq.html) for our system.
+
+Adding the aml file to acpi
+Replacing the plist content in the acpi patches
+
+
+Fixing Power Management:
+---
+
+When validating whether X86PlatformPlugin was enabled using [IORegistryExplorer](https://github.com/khronokernel/IORegistryClone/blob/master/ioreg-302.zip), all seemed ok. 
+
+Went on to use [CPUFriend](https://github.com/acidanthera/CPUFriend/releases) and [CPUFriendFriend](https://github.com/corpnewt/CPUFriendFriend).
+
+When running CPUFriendFriend, the following values were selected:
+- 0C for LFM (default)
+- 90 for balanced power saving (default)
+- 05 for Modern MacBook Pro (default)
+- y to enable additional power saving features (custom)
+
+Fixing CFG_LOCK:
+---
+Tried to follow the guide for Dell machines, [available here](https://github.com/dreamwhite/bios-extraction-guide/tree/master/Dell), and ended up finding the following offset for the CFG Lock flag (in BIOS version `1.13.0`):
+```
+0x71027     One Of: CFG Lock, VarStoreInfo (VarOffset/VarName): 0x3E, VarStore: 0x3, QuestionId: 0x165, Size: 1, Min: 0x0, Max 0x1, Step: 0x0 {05 91 62 03 63 03 65 01 03 00 3E 00 10 10 00 01 00}
+```
+
+However, when getting the current value at that offset via `setup_var  0x3E`, it is already `0x00`.
+According to this value, it should already be unlocked, which is apparently not the case when validating this using `ControlMsrE2.efi`.
+
+Since the system boots and is working, I decided to leave it at this and move on.
 
 
 External useful links
