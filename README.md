@@ -178,7 +178,7 @@ Tried to follow the guide for Dell machines, [available here](https://github.com
 However, when getting the current value at that offset via `setup_var  0x3E`, it is already `0x00`.
 According to this value, it should already be unlocked, which is apparently not the case when validating this using `ControlMsrE2.efi`.
 
-Since the system boots and is working, I decided to leave it at this and move on.
+According to @sambow23 guide, a [special version of grubx64.efi](https://github.com/XDleader555/grub_setup_var/releases/tag/v1.0-alpha) must be used to apply the change using the command `setup_var CpuSetup 0x3E 0x0`, which indeed did the trick.
 
 
 External useful links
