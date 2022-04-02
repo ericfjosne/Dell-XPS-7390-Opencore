@@ -78,6 +78,7 @@ Wifi:
 
 Bluetooth:
 - [IntelBluetoothFirmware](https://github.com/OpenIntelWireless/IntelBluetoothFirmware/releases): Adds Bluetooth support to macOS when paired with an Intel wireless card. Get only the `IntelBluetoothFirmware.kext` file.
+- [BlueToolFixup.kext](https://github.com/acidanthera/BrcmPatchRAM/releases): Specific need for Bluetooth to work on Monterey
 
 Storage controller:
 - [NVMeFix](https://github.com/acidanthera/NVMeFix/releases): Used for fixing power management and initialization on non-Apple NVMe
@@ -86,20 +87,22 @@ PS2 Keyboards/Trackpads:
 - [VoodooPS2](https://github.com/acidanthera/VoodooPS2/releases): Works with various PS2 keyboards, mice, and trackpads
 - [VoodooI2C](https://github.com/VoodooI2C/VoodooI2C/releases): Attaches to I2C controllers to allow plugins to talk to I2C trackpads. To be paired with the plugin VoodooI2CHID.
 
+USB ports mapping:
+- [USBToolBox](https://github.com/USBToolBox/tool): Instead of mapping everything manually, let's use something that does it for you. Used the Windows tool to discover all available ports of the machine and generate the `UTBMap.kext` for it. Both the [latest `USBToolBox.kext`](https://github.com/USBToolBox/kext/releases) and this generated `UTBMap.kext` are necessary.
+
 SSDTs:
 ----
-Needed for Comet Lake CPU:
+These are the ones needed for Comet Lake CPU.
+
+Here are the files needed, if you don't have a Windows installed on your machine:
 
 - CPU: [SSDT-PLUG](https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html). Link to prebuilt: [SSDT-PLUG-DRTNIA.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-PLUG-DRTNIA.aml).
 - Embedded controllers: [SSDT-EC-USBX](https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html). Link to laptop prebuilt: [SSDT-EC-USBX-LAPTOP.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-EC-USBX-LAPTOP.aml)
 - Backlight: [SSDT-PNLF](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html). Link to prebuilt: [SSDT-PNLF.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-PNLF.aml)
-- I2C Trackpad: [SSDT-GPI0](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html). This is a manual step, so it will be done post-install. You will need a mouse to install macOS. For now, we will use [SSDT-XOSI.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-XOSI.aml)
+- I2C Trackpad: You can do this manually and generate the appropriate [SSDT-GPI0](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html). I skipped this and decided to use [SSDT-XOSI.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-XOSI.aml)
 - AWAC system clock: [SSDT-AWAC](https://dortania.github.io/Getting-Started-With-ACPI/Universal/awac.html). Link to prebuilt: [SSDT-AWAC.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-AWAC.aml)
 
-
-At this stage, your EFI folder should be looking like this:
-
-<img src="https://i.imgur.com/BpuXThZ.png"/>
+If you have a Windows machine, generate the ones you need using [SSDTTime](https://github.com/corpnewt/SSDTTime) as described in the [opencore guide](https://dortania.github.io/Getting-Started-With-ACPI/ssdt-methods/ssdt-easy.html). The `.aml` files committed in this repo were generated this way.
 
 Let's get started with the configuration file.
 
@@ -110,7 +113,7 @@ For this machine, we need to follow the [Coffee Lake laptop guide](coffee-lake-p
 - ACPI
   - Patch: Because we are currently using SSDT-XOSI, we need to add the [following patching](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/coffee-lake-plus.html#acpi)
 - DeviceProperties
-  - Add: The GPU is supposed to be UHD 620, meaning that the AAPL,ig-platform-id _should_ be `00009B3E` according to the install guide. However, the [WhateverGreen FAQ](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md#intel-uhd-graphics-610-655-coffee-lake-and-comet-lake-processors) recommends using the value `0900A53E` as AAPL,ig-platform-id (framebuffer = `0x3EA50009`). I went with WhateverGreen recommendation, but forced device-id with data `9B3E0000`.
+  - Add: The GPU is supposed to be UHD 620, meaning that the AAPL,ig-platform-id _should_ be `00009B3E` according to the install guide. However, the [WhateverGreen FAQ](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md#intel-uhd-graphics-610-655-coffee-lake-and-comet-lake-processors) recommends using the value `0900A53E` as AAPL,ig-platform-id (framebuffer = `0x3EA50009`). I went with WhateverGreen recommendation, but forced device-id with data `9B3E0000`. I reused all the patching configuration parameters [discovered by @sambow23](https://github.com/sambow23/Dell-XPS-13-7390-macOS#gpudisplay) (thanks for making this available by the way!)
 - Kernel
   - Emulate: since this is a comet lake CPU, I checked the hardware ID according to Windows. It is identified as `ACPI\GenuineIntel_-_Intel64_Family_6_Model_142`. On Linux, it returns 142. No need for spoofing any value.
 - NVRAM
@@ -120,13 +123,68 @@ For this machine, we need to follow the [Coffee Lake laptop guide](coffee-lake-p
   - I decided to go with a MacBookPro16,3. It matches the CPU type of the [i7-10510U](https://ark.intel.com/content/www/us/en/ark/products/196449/intel-core-i710510u-processor-8m-cache-up-to-4-90-ghz.html): quad core 15W, 13" display size. Only the iGPU does not match, but what we changed in the DeviceProperties should be enough. You will need to adjust all other parameters for this to work.
 
 
+Post-install fixes:
+---
 
+Fixing Sound:
+---
+
+According to the soundcard name, our codec is ALC3271. But this is a rebranded one. The true lies elsewhere. Under Windows, in the Device Manager, when opening up the properties > events linked to the sound card, it shows:
+
+```
+Device INTELAUDIO\FUNC_01&VEN_10EC&DEV_0299&SUBSYS_10280962&REV_1000\5&18f4f3cb&0&0001 was configured.
+```
+
+This means that this actually requires codec ALC299, which requires layout 21 or 22 according to the [AppleALC Supported codecs page](https://github.com/acidanthera/AppleALC/wiki/Supported-codecs). The right value for this machine is `22`. 
+
+After checking with gfxutil, our sound devide is identified as follow:
+
+```
+efj@xps Downloads % ./gfxutil -f HDEF
+00:1f.3 8086:02c8 /PCI0@0/HDEF@1F,3 = PciRoot(0x0)/Pci(0x1F,0x3)
+```
+
+So, we reflect all this in our `config.plist` by adding:
+
+```
+DeviceProperties > Add > PciRoot(0x0)/Pci(0x1F,0x3) > layout-id = 22 (Number)
+```
+
+But it still doesn't work ... so, as advised in the install guide, we need to create [SSDT-HPET fixes](https://dortania.github.io/Getting-Started-With-ACPI/Universal/irq.html) for our system. And it is still not enough ... 
+
+Thanks to the information found in [@sambow23 guide](https://github.com/sambow23/Dell-XPS-13-7390-macOS#sound), it seems that all that is needed for this to work now is the latest [CodecCommander.kext](https://bitbucket.org/RehabMan/os-x-eapd-codec-commander/downloads/). Just add it to your kext folder, then  copy `hda-verb` to `/usr/local/bin` (Create the folder if it does not exist)
+
+
+Fixing Power Management:
+---
+
+When validating whether X86PlatformPlugin was enabled using [IORegistryExplorer](https://github.com/khronokernel/IORegistryClone/blob/master/ioreg-302.zip), all seemed ok. 
+
+Went on to use [CPUFriend](https://github.com/acidanthera/CPUFriend/releases) and [CPUFriendFriend](https://github.com/corpnewt/CPUFriendFriend).
+
+When running CPUFriendFriend, the following values were selected:
+- 04 for LFM (value found in BIOS)
+- 90 for balanced power saving (default)
+- 05 for Modern MacBook Pro (default)
+- y to enable additional power saving features (custom)
+
+Fixing CFG_LOCK:
+---
+Tried to follow the guide for Dell machines, [available here](https://github.com/dreamwhite/bios-extraction-guide/tree/master/Dell), and ended up finding the following offset for the CFG Lock flag (in BIOS version `1.13.0`):
+```
+0x71027     One Of: CFG Lock, VarStoreInfo (VarOffset/VarName): 0x3E, VarStore: 0x3, QuestionId: 0x165, Size: 1, Min: 0x0, Max 0x1, Step: 0x0 {05 91 62 03 63 03 65 01 03 00 3E 00 10 10 00 01 00}
+```
+
+However, when getting the current value at that offset via `setup_var  0x3E`, it is already `0x00`.
+According to this value, it should already be unlocked, which is apparently not the case when validating this using `ControlMsrE2.efi`.
+
+According to [@sambow23's repository README](https://github.com/sambow23/Dell-XPS-13-7390-macOS#cfg-lock), a [special version of grubx64.efi](https://github.com/XDleader555/grub_setup_var/releases/tag/v1.0-alpha) must be used to apply the change using the command `setup_var CpuSetup 0x3E 0x0`, which indeed did the trick.
 
 
 External useful links
 ---
 - Official Dell product page: [XPS 13 7390 Setup and Specifications](https://www.dell.com/support/manuals/en-us/xps-13-7390-laptop/xps-7390-setup-and-specifications/specifications-of-xps-13-7390?guid=guid-7c9f07ce-626e-44ca-be3a-a1fb036413f9&lang=en-us)
-- Sambow23 similar project: https://github.com/sambow23/Dell-XPS-13-7390-macOS
+- Sambow23 opencore project repository: https://github.com/sambow23/Dell-XPS-13-7390-macOS
 - Intel ARK processor page: [Intel® Core™ i7-10510U Processor](https://ark.intel.com/content/www/us/en/ark/products/196449/intel-core-i710510u-processor-8m-cache-up-to-4-90-ghz.html)
 - Wikipedia Intel Comet Lake page: https://en.wikipedia.org/wiki/Comet_Lake_(microprocessor)
 - Check Apple coverage based on serial number: https://checkcoverage.apple.com/
