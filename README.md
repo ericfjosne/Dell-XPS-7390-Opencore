@@ -92,18 +92,17 @@ USB ports mapping:
 
 SSDTs:
 ----
-Needed for Comet Lake CPU:
+These are the ones needed for Comet Lake CPU.
+
+Here are the files needed, if you don't have a Windows installed on your machine:
 
 - CPU: [SSDT-PLUG](https://dortania.github.io/Getting-Started-With-ACPI/Universal/plug.html). Link to prebuilt: [SSDT-PLUG-DRTNIA.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-PLUG-DRTNIA.aml).
 - Embedded controllers: [SSDT-EC-USBX](https://dortania.github.io/Getting-Started-With-ACPI/Universal/ec-fix.html). Link to laptop prebuilt: [SSDT-EC-USBX-LAPTOP.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-EC-USBX-LAPTOP.aml)
 - Backlight: [SSDT-PNLF](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/backlight.html). Link to prebuilt: [SSDT-PNLF.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-PNLF.aml)
-- I2C Trackpad: [SSDT-GPI0](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html). This is a manual step, so it will be done post-install. You will need a mouse to install macOS. For now, we will use [SSDT-XOSI.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-XOSI.aml)
+- I2C Trackpad: You can do this manually and generate the appropriate [SSDT-GPI0](https://dortania.github.io/Getting-Started-With-ACPI/Laptops/trackpad.html). I skipped this and decided to use [SSDT-XOSI.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-XOSI.aml)
 - AWAC system clock: [SSDT-AWAC](https://dortania.github.io/Getting-Started-With-ACPI/Universal/awac.html). Link to prebuilt: [SSDT-AWAC.aml](https://github.com/dortania/Getting-Started-With-ACPI/blob/master/extra-files/compiled/SSDT-AWAC.aml)
 
-
-At this stage, your EFI folder should be looking like this:
-
-<img src="https://i.imgur.com/BpuXThZ.png"/>
+If you have a Windows machine, generate the ones you need using [SSDTTime](https://github.com/corpnewt/SSDTTime) as described in the [opencore guide](https://dortania.github.io/Getting-Started-With-ACPI/ssdt-methods/ssdt-easy.html). The `.aml` files committed in this repo were generated this way.
 
 Let's get started with the configuration file.
 
@@ -114,7 +113,7 @@ For this machine, we need to follow the [Coffee Lake laptop guide](coffee-lake-p
 - ACPI
   - Patch: Because we are currently using SSDT-XOSI, we need to add the [following patching](https://dortania.github.io/OpenCore-Install-Guide/config-laptop.plist/coffee-lake-plus.html#acpi)
 - DeviceProperties
-  - Add: The GPU is supposed to be UHD 620, meaning that the AAPL,ig-platform-id _should_ be `00009B3E` according to the install guide. However, the [WhateverGreen FAQ](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md#intel-uhd-graphics-610-655-coffee-lake-and-comet-lake-processors) recommends using the value `0900A53E` as AAPL,ig-platform-id (framebuffer = `0x3EA50009`). I went with WhateverGreen recommendation, but forced device-id with data `9B3E0000`.
+  - Add: The GPU is supposed to be UHD 620, meaning that the AAPL,ig-platform-id _should_ be `00009B3E` according to the install guide. However, the [WhateverGreen FAQ](https://github.com/acidanthera/WhateverGreen/blob/master/Manual/FAQ.IntelHD.en.md#intel-uhd-graphics-610-655-coffee-lake-and-comet-lake-processors) recommends using the value `0900A53E` as AAPL,ig-platform-id (framebuffer = `0x3EA50009`). I went with WhateverGreen recommendation, but forced device-id with data `9B3E0000`. I reused all the patching configuration parameters [discovered by @sambow23](https://github.com/sambow23/Dell-XPS-13-7390-macOS#gpudisplay) (thanks for making this available by the way!)
 - Kernel
   - Emulate: since this is a comet lake CPU, I checked the hardware ID according to Windows. It is identified as `ACPI\GenuineIntel_-_Intel64_Family_6_Model_142`. On Linux, it returns 142. No need for spoofing any value.
 - NVRAM
@@ -151,10 +150,9 @@ So, we reflect all this in our `config.plist` by adding:
 DeviceProperties > Add > PciRoot(0x0)/Pci(0x1F,0x3) > layout-id = 22 (Number)
 ```
 
-But it still doesn't work ... so, as advised in the install guide, we need to create [SSDT-HPET fixes](https://dortania.github.io/Getting-Started-With-ACPI/Universal/irq.html) for our system.
+But it still doesn't work ... so, as advised in the install guide, we need to create [SSDT-HPET fixes](https://dortania.github.io/Getting-Started-With-ACPI/Universal/irq.html) for our system. And it is still not enough ... 
 
-Adding the aml file to acpi
-Replacing the plist content in the acpi patches
+Thanks to the information found in [@sambow23 guide](https://github.com/sambow23/Dell-XPS-13-7390-macOS#sound), it seems that all that is needed for this to work now is the latest [CodecCommander.kext](https://bitbucket.org/RehabMan/os-x-eapd-codec-commander/downloads/). Just add it to your kext folder, then  copy `hda-verb` to `/usr/local/bin` (Create the folder if it does not exist)
 
 
 Fixing Power Management:
@@ -186,7 +184,7 @@ Since the system boots and is working, I decided to leave it at this and move on
 External useful links
 ---
 - Official Dell product page: [XPS 13 7390 Setup and Specifications](https://www.dell.com/support/manuals/en-us/xps-13-7390-laptop/xps-7390-setup-and-specifications/specifications-of-xps-13-7390?guid=guid-7c9f07ce-626e-44ca-be3a-a1fb036413f9&lang=en-us)
-- Sambow23 similar project: https://github.com/sambow23/Dell-XPS-13-7390-macOS
+- Sambow23 opencore project repository: https://github.com/sambow23/Dell-XPS-13-7390-macOS
 - Intel ARK processor page: [Intel® Core™ i7-10510U Processor](https://ark.intel.com/content/www/us/en/ark/products/196449/intel-core-i710510u-processor-8m-cache-up-to-4-90-ghz.html)
 - Wikipedia Intel Comet Lake page: https://en.wikipedia.org/wiki/Comet_Lake_(microprocessor)
 - Check Apple coverage based on serial number: https://checkcoverage.apple.com/
